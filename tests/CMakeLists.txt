@@ -200,6 +200,10 @@ llama_build_and_test(
     peg-parser/tests.h
 )
 llama_build_and_test(test-regex-partial.cpp)
+add_executable(test-gemma4-arch test-gemma4-arch.cpp)
+target_link_libraries(test-gemma4-arch PRIVATE llama)
+add_test(NAME test-gemma4-arch COMMAND $<TARGET_FILE:test-gemma4-arch>)
+set_property(TEST test-gemma4-arch PROPERTY LABELS "main")
 
 # llama_target_and_test(test-opt.cpp) # SLOW
 

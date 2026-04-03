@@ -237,6 +237,7 @@ struct llm_build_context {
     ggml_cgraph * build_gemma2();
 
     ggml_cgraph * build_gemma3();
+    ggml_cgraph * build_gemma4();
 
     ggml_cgraph * build_starcoder2();
 
@@ -337,7 +338,8 @@ struct llm_build_context {
                     int32_t   kv_head,
                     int32_t   n_kv,
                     float     kq_scale,
-         const llm_build_cb & cb, int il, ggml_tensor * sinks = nullptr, int n_swa = 0);
+         const llm_build_cb & cb, int il, ggml_tensor * sinks = nullptr, int n_swa = 0,
+                    int       il_kv = -1);
 
     static ggml_tensor * llm_build_ffn(ggml_context * ctx, llama_context & lctx, ggml_tensor * ffn_norm,
          ggml_tensor * cur,
@@ -371,7 +373,9 @@ struct llm_build_context {
                       float   w_scale,
 llm_expert_gating_func_type   gating_op,
          const llm_build_cb & cb, int il, ggml_cgraph * graph = nullptr, bool add_input = false,
-         ggml_tensor * up_gate_exps = nullptr, ggml_tensor * up_gate_exps_b = nullptr);
+         ggml_tensor * up_gate_exps = nullptr, ggml_tensor * up_gate_exps_b = nullptr,
+         ggml_tensor * probs_in = nullptr,
+         ggml_tensor * up_exps_s = nullptr, ggml_tensor * down_exps_s = nullptr);
 
     static ggml_tensor * llm_build_moe_ffn(ggml_context * ctx, llama_context & lctx,
          ggml_tensor * cur,

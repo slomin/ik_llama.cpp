@@ -234,6 +234,10 @@ struct llama_layer {
     struct ggml_tensor * ffn_norm = nullptr;
     struct ggml_tensor * ffn_norm_b = nullptr;
     struct ggml_tensor * ffn_post_norm = nullptr;
+    struct ggml_tensor * ffn_post_norm_1 = nullptr;   // gemma4
+    struct ggml_tensor * ffn_post_norm_2 = nullptr;   // gemma4
+    struct ggml_tensor * ffn_pre_norm_2 = nullptr;    // gemma4
+    struct ggml_tensor * layer_out_scale = nullptr;   // gemma4
     struct ggml_tensor * layer_out_norm = nullptr;
     struct ggml_tensor * layer_out_norm_b = nullptr;
     struct ggml_tensor * ffn_norm_exps = nullptr;
@@ -260,6 +264,9 @@ struct llama_layer {
     struct ggml_tensor * ffn_up_exps  = nullptr;
     struct ggml_tensor * ffn_up_gate_exps  = nullptr;
 
+    struct ggml_tensor * ffn_down_exps_s    = nullptr;
+    struct ggml_tensor * ffn_gate_up_exps_s = nullptr;
+
     llama_split_tensor split_ffn_gate_inp;
     llama_split_tensor split_ffn_up_exps;
     llama_split_tensor split_ffn_gate_exps;
@@ -275,6 +282,8 @@ struct llama_layer {
     struct ggml_tensor * ffn_gate_exps_b_dup = nullptr;
     struct ggml_tensor * ffn_down_exps_b_dup = nullptr;
     struct ggml_tensor * ffn_up_exps_b_dup = nullptr;
+
+    struct ggml_tensor * ffn_gate_inp_s     = nullptr;
 
     // ff shared expert (shexp)
     struct ggml_tensor * ffn_gate_inp_shexp = nullptr;
@@ -348,6 +357,23 @@ struct llama_layer {
     struct ggml_tensor * ffn_up_scale = nullptr;
     struct ggml_tensor * ffn_down_scale = nullptr;
 
+    // gemma3n/gemma4 per-layer embeddings
+    struct ggml_tensor * per_layer_inp_gate  = nullptr;
+    struct ggml_tensor * per_layer_proj      = nullptr;
+    struct ggml_tensor * per_layer_post_norm = nullptr;
+
+    // gemma3n altup
+    struct ggml_tensor * altup_correct_coef  = nullptr;
+    struct ggml_tensor * altup_correct_scale = nullptr;
+    struct ggml_tensor * altup_predict_coef  = nullptr;
+    struct ggml_tensor * altup_router        = nullptr;
+    struct ggml_tensor * altup_router_norm   = nullptr;
+
+    // gemma3n laurel
+    struct ggml_tensor * laurel_l         = nullptr;
+    struct ggml_tensor * laurel_r         = nullptr;
+    struct ggml_tensor * laurel_post_norm = nullptr;
+
     struct llama_layer_nextn nextn;
 
     std::unique_ptr<ggml_tensor> computed_wk_b;
@@ -385,6 +411,15 @@ struct llama_model {
     struct ggml_tensor * output;
     struct ggml_tensor * output_b;
     struct ggml_tensor * output_norm_enc;
+
+    // gemma3n/gemma4 per-layer embeddings (model-level)
+    struct ggml_tensor * tok_embd_per_layer = nullptr;
+    struct ggml_tensor * per_layer_model_proj = nullptr;
+    struct ggml_tensor * per_layer_proj_norm = nullptr;
+
+    // gemma3n altup (model-level)
+    struct ggml_tensor * altup_proj = nullptr;
+    struct ggml_tensor * altup_unembd_proj = nullptr;
 
     llama_split_tensor split_output;
     llama_split_tensor split_output_norm;
